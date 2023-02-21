@@ -364,8 +364,6 @@ def hypdescend(points,H,howmany,maxstep,minstep,a,b,storepoints = False):
         
         step[0,stepstep] = b * step[0,stepstep]   # Didn't pass, isn't done
         
-        done[stepstep & (step.flatten() < minstep)] = True
-        
         done[stepstep] = step.flatten()[stepstep] < minstep
     
         if done.sum() >= howmany or done.all():
