@@ -6,6 +6,7 @@ tracking for the RIT LASSO senior design project.
 """
 
 import numpy as np
+import scipy.fft as sp_fft
 
 def makepairs(R,pairs):
     """
@@ -381,3 +382,36 @@ def hypdescend(points,H,howmany,maxstep,minstep,a,b,storepoints = False):
     else:
         return points
             
+def xcorrr(x,y):
+    """
+    
+    Linear cross-correlation of real signals using FFTs
+
+    Parameters
+    ----------
+    x : M-vector
+        First vector to be cross-correlated.
+    y : N-vector
+        Second vector to be cross-correlated.
+
+    Returns
+    -------
+    z : (M + N - 1)-vector
+        Cross correlation of x & y.
+
+    """
+    
+    lenx = len(x)
+    leny = len(y)
+    lenz = lenx + leny - 1
+    
+    next2 = 2**int(np.ceil(np.log2(lenz)))
+    padx = next2 - lenx
+    pady = next2 - leny
+    
+    xp = np.pad(x, (0,padx))
+    yp = np.pad(y, (pady,0))
+    
+    z = sp_fft.irfft( sp_fft.rfft(xp) * sp_fft.rfft(yp[::-1]) )[0:lenz]
+    
+    return z
